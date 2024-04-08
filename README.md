@@ -8,19 +8,19 @@ ID3 使用的分类标准是信息增益，它表示得知特征 A 的信息而�
 
 数据集的信息熵：
 
-![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/3f9w4kwiz5.svg)
+![image-20240408235918617](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408235918617.png)
 
-其中 ![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/vwy5gdi4ng.svg) 表示集合 D 中属于第 k 类样本的样本子集。
+其中 $C_{k}$ 表示集合 D 中属于第 k 类样本的样本子集。
 
-针对某个特征 A，对于数据集 D 的条件熵 ![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/g4slenu3gc.svg)
+针对某个特征 A，对于数据集 D 的条件熵 $H(D|A)$
 
- 为：![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/3v7m41lud8.svg)
+ 为：![image-20240408235846700](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408235846700.png)
 
-其中 ![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/uu5mhkf85z.svg) 表示 D 中特征 A 取第 i 个值的样本子集， ![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/511bgvw32m.svg)表示 ![img](https://ask.qcloudimg.com/http-save/7469656/uu5mhkf85z.svg) 中属于第 k 类的样本子集。
+其中$D_i$ 表示 D 中特征 A 取第 i 个值的样本子集， $D_{ik}$表示$D_i$中属于第 k 类的样本子集。
 
 信息增益 = 信息熵 - 条件熵：
 
-![img](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/vffx6d5yga.svg)
+![image-20240408235832461](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408235832461.png)
 
 信息增益越大表示使用特征 A 来划分所获得的“纯度提升越大”。
 
@@ -144,9 +144,9 @@ class ID3DecisionTree:
 
 ## C4.5决策树
 
-利用信息增益率可以克服信息增益的缺点，其公式为![img](https://ask.qcloudimg.com/http-save/7469656/phghpcyf0b.svg)
+利用信息增益率可以克服信息增益的缺点，其公式为![image-20240408235747490](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408235747490.png)
 
-![img](https://ask.qcloudimg.com/http-save/7469656/5pcbwz5z18.svg)称为特征 A 的固有值。
+$H_A(D)$!称为特征 A 的固有值。
 
 这里需要注意，信息增益率对可取值较少的特征有所偏好（分母越小，整体越大），因此 C4.5 并不是直接用增益率最大的特征进行划分，而是使用一个启发式方法：先从候选划分特征中找到信息增益高于平均值的特征，再从中选择增益率最高的。
 
