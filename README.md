@@ -136,13 +136,23 @@ class ID3DecisionTree:
 
 **结果:**
 
+【---------测试集----------】
 Accuracy: 0.97
 正反例的Accuracy: 0.97
 正反例:召回率(Recall): 0.9821428571428571
 正反例:精确率(Precision): 0.9482758620689655
 正反例:F1-Score: 0.9649122807017544
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408225732120.png" alt="image-20240408225732120" style="zoom:67%;" />
+![image-20240409093734533](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409093734533.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.993
+正反例的Accuracy: 0.993
+正反例:召回率(Recall): 0.9966666666666667
+正反例:精确率(Precision): 0.9867986798679867
+正反例:F1-Score: 0.9917081260364843
+
+![image-20240409093752717](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409093752717.png)
 
 ---
 
@@ -284,13 +294,23 @@ class C45DecisionTree:
 
 **结果：**
 
+【---------测试集----------】
 Accuracy: 0.975
 正反例的Accuracy: 0.975
 正反例:召回率(Recall): 0.9821428571428571
 正反例:精确率(Precision): 0.9649122807017544
 正反例:F1-Score: 0.9734513274336283
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408231220514.png" alt="image-20240408231220514" style="zoom:67%;" />
+![image-20240409093629527](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409093629527.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.995
+正反例的Accuracy: 0.995
+正反例:召回率(Recall): 0.9966666666666667
+正反例:精确率(Precision): 0.9933554817275747
+正反例:F1-Score: 0.995008319467554
+
+![image-20240409093649025](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409093649025.png)
 
 ---
 
@@ -396,13 +416,23 @@ CHAID(Chi-squared Automatic Interaction Detection)决策树是一种基于卡方
 
 **结果：**
 
+【---------测试集----------】
 Accuracy: 0.86
 正反例的Accuracy: 0.86
 正反例:召回率(Recall): 0.8214285714285714
 正反例:精确率(Precision): 0.8679245283018868
 正反例:F1-Score: 0.8440366972477065
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408231330084.png" alt="image-20240408231330084" style="zoom:67%;" />
+![image-20240409105147412](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105147412.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.935
+正反例的Accuracy: 0.935
+正反例:召回率(Recall): 0.9233333333333333
+正反例:精确率(Precision): 0.9518900343642611
+正反例:F1-Score: 0.9373942470389172
+
+![image-20240409105203310](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105203310.png)
 
 ## CART决策树
 
@@ -520,13 +550,23 @@ class CARTDecisionTree:
 
 **结果**
 
+【---------测试集----------】
 Accuracy: 0.97
 正反例的Accuracy: 0.97
 正反例:召回率(Recall): 0.9821428571428571
 正反例:精确率(Precision): 0.9482758620689655
 正反例:F1-Score: 0.9649122807017544
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408232326626.png" alt="image-20240408232326626" style="zoom:67%;" />
+![image-20240409105332294](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105332294.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.994
+正反例的Accuracy: 0.994
+正反例:召回率(Recall): 0.9966666666666667
+正反例:精确率(Precision): 0.9900662251655629
+正反例:F1-Score: 0.9933554817275748
+
+![image-20240409105346612](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105346612.png)
 
 ### 关于四种基本决策树的小总结
 
@@ -592,13 +632,23 @@ y_pred = rf.predict(X_test)
 
 **结果：**
 
+【---------测试集----------】
 Accuracy: 0.94
 正反例的Accuracy: 0.94
 正反例:召回率(Recall): 0.8928571428571429
 正反例:精确率(Precision): 0.9803921568627451
 正反例:F1-Score: 0.9345794392523364
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408233722491.png" alt="image-20240408233722491" style="zoom:67%;" />
+![image-20240409105606027](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105606027.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.988
+正反例的Accuracy: 0.988
+正反例:召回率(Recall): 0.98
+正反例:精确率(Precision): 0.9966101694915255
+正反例:F1-Score: 0.9882352941176471
+
+![image-20240409105622501](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105622501.png)
 
 ## XGBoost方法
 
@@ -638,13 +688,23 @@ XGBoost 还引入了一些优化技巧，如二阶泰勒展开、正则化、列
 
 **结果：**
 
+【---------测试集----------】
 Accuracy: 0.98
 正反例的Accuracy: 0.98
 正反例:召回率(Recall): 0.9821428571428571
 正反例:精确率(Precision): 0.9821428571428571
 正反例:F1-Score: 0.9821428571428571
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408234420702.png" alt="image-20240408234420702" style="zoom: 80%;" />
+![image-20240409110811203](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409110811203.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.6442307692307693
+正反例的Accuracy: 0.6442307692307693
+正反例:召回率(Recall): 0.0
+正反例:精确率(Precision): 0.0
+正反例:F1-Score: 0.0
+
+![image-20240409110827976](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409110827976.png)
 
 ## LightGBM方法
 
@@ -685,13 +745,23 @@ LightGBM 的优势在于其高效的内存使用和并行计算能力。它使�
 **结果：**
 
 [LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+【---------测试集----------】
 Accuracy: 0.97
 正反例的Accuracy: 0.97
 正反例:召回率(Recall): 0.9642857142857143
 正反例:精确率(Precision): 0.9818181818181818
 正反例:F1-Score: 0.972972972972973
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408234753367.png" alt="image-20240408234753367" style="zoom:67%;" />
+![image-20240409111148908](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111148908.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.646978021978022
+正反例的Accuracy: 0.646978021978022
+正反例:召回率(Recall): 0.0
+正反例:精确率(Precision): 0.0
+正反例:F1-Score: 0.0
+
+![image-20240409111208127](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111208127.png)
 
 ## GBDT方法
 
@@ -716,13 +786,23 @@ GBDT的优点包括:
 
 **结果**
 
+【---------测试集----------】
 Accuracy: 0.965
 正反例的Accuracy: 0.965
 正反例:召回率(Recall): 0.9285714285714286
 正反例:精确率(Precision): 0.9811320754716981
 正反例:F1-Score: 0.9541284403669724
 
-<img src="https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240408235126309.png" alt="image-20240408235126309" style="zoom:67%;" />
+![image-20240409111327130](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111327130.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.988
+正反例的Accuracy: 0.988
+正反例:召回率(Recall): 0.9866666666666667
+正反例:精确率(Precision): 0.9866666666666667
+正反例:F1-Score: 0.9866666666666668
+
+<![image-20240409111339232](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111339232.png)
 
 
 

@@ -133,6 +133,7 @@ clf.fit(X_train, y_train)
 # 在测试集上预测
 y_pred = clf.predict(X_test)
 
+print('【---------测试集----------】')
 # 计算准确率
 accuracy = metrics.accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy}")
@@ -159,13 +160,62 @@ roc_auc = metrics.auc(fpr, tpr)
 
 # 绘制ROC曲线
 plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='test set:ROC curve (area = %0.2f)' % roc_auc)
 plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC)')
+plt.title('test set:Receiver Operating Characteristic (ROC)')
+plt.legend(loc="lower right")
+plt.show()
+
+
+print('【---------验证集----------】')
+# 泛化误差计算
+val_df = pd.read_csv('dataset/val.csv', names=['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety', 'label'])
+# 将特征值转换为数值
+features = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety']
+for feature in features:
+    val_df[feature] = df[feature].astype('category').cat.codes
+
+X_val = df[features]
+y_val = df['label']
+# 在验证集上预测
+y_pred = clf.predict(X_val)
+# 计算准确率
+accuracy = metrics.accuracy_score(y_val, y_pred)
+print(f"验证集Accuracy: {accuracy}")
+
+# 将标签转换为二进制形式（unacc为0，其他为1）
+y_val_binary = np.where(y_val == 'unacc', 0, 1)
+y_pred_binary = np.where(np.array(y_pred) == 'unacc', 0, 1)
+
+b_accuracy = metrics.accuracy_score(y_val_binary, y_pred_binary)
+print(f"正反例的Accuracy: {accuracy}")
+# 计算召回率、精确率和F1-Score
+b_recall = metrics.recall_score(y_val_binary, y_pred_binary)
+b_precision = metrics.precision_score(y_val_binary, y_pred_binary)
+b_f1 = metrics.f1_score(y_val_binary, y_pred_binary)
+print(f"正反例:召回率(Recall): {b_recall}")
+print(f"正反例:精确率(Precision): {b_precision}")
+print(f"正反例:F1-Score: {b_f1}")
+
+# 计算ROC曲线所需的假阳性率和真阳性率
+fpr, tpr, _ = metrics.roc_curve(y_val_binary, y_pred_binary)
+
+# 计算AUC（ROC曲线下的面积）
+roc_auc = metrics.auc(fpr, tpr)
+
+# 绘制ROC曲线
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='Val set:ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Val set:Receiver Operating Characteristic (ROC)')
 plt.legend(loc="lower right")
 plt.show()
 
