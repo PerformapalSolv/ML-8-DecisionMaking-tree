@@ -52,11 +52,25 @@ y_pred = bst.predict(X_test, num_iteration=bst.best_iteration)
 y_pred = [list(x).index(max(x)) for x in y_pred]
 
 # 评估模型
-print("Accuracy:", accuracy_score(y_test, y_pred))
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
 
 # 将标签转换为二进制形式（unacc为0，其他为1）
 y_test_binary = np.where(y_test == le.transform(['unacc'])[0], 0, 1)
 y_pred_binary = np.where(y_pred == le.transform(['unacc'])[0], 0, 1)
+
+b_accuracy = metrics.accuracy_score(y_test_binary, y_pred_binary)
+print(f"正反例的Accuracy: {accuracy}")
+# 计算召回率、精确率和F1-Score
+b_recall = metrics.recall_score(y_test_binary, y_pred_binary)
+b_precision = metrics.precision_score(y_test_binary, y_pred_binary)
+b_f1 = metrics.f1_score(y_test_binary, y_pred_binary)
+print(f"正反例:召回率(Recall): {b_recall}")
+print(f"正反例:精确率(Precision): {b_precision}")
+print(f"正反例:F1-Score: {b_f1}")
+
+
 # 计算ROC曲线所需的假阳性率和真阳性率
 fpr, tpr, _ = metrics.roc_curve(y_test_binary, y_pred_binary)
 
