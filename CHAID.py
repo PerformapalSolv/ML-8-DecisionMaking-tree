@@ -50,7 +50,21 @@ class CHAIDDecisionTree:
         best_feature = None
         best_splits = None
         best_p_value = 1.0
+        best_chi2 = 0.0
+        for feature in range(X.shape[1]):
+            unique_values = np.unique(X[:, feature])
+            if len(unique_values) <= 1:
+                continue
 
+            contingency_table = pd.crosstab(X[:, feature], y)
+            chi2, p_value, _, _ = chi2_contingency(contingency_table)
+
+            if best_chi2 < chi2 and p_value <= self.alpha:
+                best_chi2 = chi2
+                best_feature = feature
+                best_splits = {value: (X[:, feature] == value) for value in unique_values}
+        """
+        # 使用P值，选择最小的P值
         for feature in range(X.shape[1]):
             unique_values = np.unique(X[:, feature])
             if len(unique_values) <= 1:
@@ -63,7 +77,7 @@ class CHAIDDecisionTree:
                 best_p_value = p_value
                 best_feature = feature
                 best_splits = {value: (X[:, feature] == value) for value in unique_values}
-
+        """
         return best_feature, best_splits
 
     def predict(self, X):
@@ -172,19 +186,20 @@ print(f"正反例:精确率(Precision): {b_precision}")
 print(f"正反例:F1-Score: {b_f1}")
 
 # 计算ROC曲线所需的假阳性率和真阳性率
-fpr, tpr, _ = metrics.roc_curve(y_val_binary, y_pred_binary)
+fpr_val, tpr_val, _ = metrics.roc_curve(y_val_binary, y_pred_binary)
 
 # 计算AUC（ROC曲线下的面积）
-roc_auc = metrics.auc(fpr, tpr)
+roc_auc_val = metrics.auc(fpr_val, tpr_val)
 
-# 绘制ROC曲线
+# 绘制测试集和验证集的ROC曲线
 plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='Val set:ROC curve (area = %0.2f)' % roc_auc)
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='Test set: ROC curve (area = %0.2f)' % roc_auc)
+plt.plot(fpr_val, tpr_val, color='blue', lw=2, label='Val set: ROC curve (area = %0.2f)' % roc_auc_val)
 plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Val set:Receiver Operating Characteristic (ROC)')
+plt.title('Receiver Operating Characteristic (ROC)')
 plt.legend(loc="lower right")
 plt.show()

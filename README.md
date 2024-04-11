@@ -154,6 +154,8 @@ Accuracy: 0.97
 
 ![image-20240409093752717](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409093752717.png)
 
+![image-20240411174558964](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411174558964.png)
+
 ---
 
 ## C4.5决策树
@@ -312,6 +314,8 @@ Accuracy: 0.975
 
 ![image-20240409093649025](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409093649025.png)
 
+![image-20240411175142273](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411175142273.png)
+
 ---
 
 ## CHAID决策树
@@ -367,23 +371,37 @@ class CHAIDDecisionTree:
         return tree
 
     def _choose_best_split(self, X, y):
-        best_feature = None  # 最佳分裂特征
-        best_splits = None  # 最佳分裂点
-        best_p_value = 1.0  # 最佳p值
-
-        for feature in range(X.shape[1]):  # 遍历所有特征
-            unique_values = np.unique(X[:, feature])  # 获取当前特征的唯一值
-            if len(unique_values) <= 1:  # 如果唯一值少于等于1,跳过该特征
+        best_feature = None
+        best_splits = None
+        best_p_value = 1.0
+        best_chi2 = 0.0
+        for feature in range(X.shape[1]):
+            unique_values = np.unique(X[:, feature])
+            if len(unique_values) <= 1:
                 continue
 
-            contingency_table = pd.crosstab(X[:, feature], y)  # 创建列联表
-            chi2, p_value, _, _ = chi2_contingency(contingency_table)  # 进行卡方检验
+            contingency_table = pd.crosstab(X[:, feature], y)
+            chi2, p_value, _, _ = chi2_contingency(contingency_table)
 
-            if p_value < best_p_value and p_value <= self.alpha:  # 如果当前p值小于最佳p值且小于显著性水平,更新最佳分裂特征、分裂点和p值
+            if best_chi2 < chi2 and p_value <= self.alpha:
+                best_chi2 = chi2
+                best_feature = feature
+                best_splits = {value: (X[:, feature] == value) for value in unique_values}
+        """
+        # 使用P值，选择最小的P值
+        for feature in range(X.shape[1]):
+            unique_values = np.unique(X[:, feature])
+            if len(unique_values) <= 1:
+                continue
+
+            contingency_table = pd.crosstab(X[:, feature], y)
+            chi2, p_value, _, _ = chi2_contingency(contingency_table)
+
+            if p_value < best_p_value and p_value <= self.alpha:
                 best_p_value = p_value
                 best_feature = feature
                 best_splits = {value: (X[:, feature] == value) for value in unique_values}
-
+        """
         return best_feature, best_splits
 
     def predict(self, X):
@@ -416,6 +434,8 @@ CHAID(Chi-squared Automatic Interaction Detection)决策树是一种基于卡方
 
 **结果：**
 
+使用P值
+
 【---------测试集----------】
 Accuracy: 0.86
 正反例的Accuracy: 0.86
@@ -433,6 +453,28 @@ Accuracy: 0.86
 正反例:F1-Score: 0.9373942470389172
 
 ![image-20240409105203310](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105203310.png)
+
+**使用卡方值**
+
+【---------测试集----------】
+Accuracy: 0.86
+正反例的Accuracy: 0.86
+正反例:召回率(Recall): 0.8214285714285714
+正反例:精确率(Precision): 0.8679245283018868
+正反例:F1-Score: 0.8440366972477065
+
+![image-20240411112838181](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411112838181.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.935
+正反例的Accuracy: 0.935
+正反例:召回率(Recall): 0.9233333333333333
+正反例:精确率(Precision): 0.9518900343642611
+正反例:F1-Score: 0.9373942470389172
+
+![image-20240411112821806](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411112821806.png)
+
+![image-20240411175608257](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411175608257.png)
 
 ## CART决策树
 
@@ -568,6 +610,8 @@ Accuracy: 0.97
 
 ![image-20240409105346612](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105346612.png)
 
+![image-20240411175646610](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411175646610.png)
+
 ### 关于四种基本决策树的小总结
 
 根据给出的ID3、C4.5、CHAID和CART决策树的代码实现,对它们进行详细的比较和分析:
@@ -650,6 +694,51 @@ Accuracy: 0.94
 
 ![image-20240409105622501](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409105622501.png)
 
+![image-20240411180032288](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411180032288.png)
+
+## GBDT方法
+
+在本代码中,通过创建GradientBoostingClassifier对象,设置决策树的数量(n_estimators)和随机种子(random_state),然后使用fit方法在训练数据上训练GBDT模型。接着,使用trained model在测试数据上进行预测,得到预测结果y_pred。最后,通过accuracy_score函数计算模型在测试集上的准确率。
+
+GBDT通过迭代地构建一系列的决策树,并使用梯度提升的方式来优化模型。每一轮迭代都在前一轮模型的残差上训练一棵新的决策树,不断地减少模型的误差。通过多轮迭代,GBDT可以生成一个强大的集成模型,在分类和回归任务上都有出色的表现。
+
+GBDT的优点包括:
+
+1. 非线性建模能力强:通过使用决策树作为基础学习器,GBDT可以捕捉数据中的非线性关系和复杂模式。
+2. 鲁棒性好:GBDT对异常值和缺失值有较好的鲁棒性,可以自动处理缺失值。
+3. 特征重要性评估:GBDT可以计算每个特征对模型的重要性,帮助进行特征选择和解释。
+4. 灵活性高:GBDT允许自定义损失函数,可以适应不同类型的问题。
+
+然而,GBDT也有一些限制:
+
+1. 训练时间较长:由于需要迭代地构建多棵决策树,GBDT的训练时间通常比单个决策树或线性模型长。
+2. 参数调优:GBDT有多个超参数需要调整,如学习率、决策树数量、最大深度等,寻找最优参数组合可能需要一定的调优过程。
+3. 内存消耗:GBDT在训练过程中需要存储多棵决策树,因此内存消耗较大,尤其是在处理大型数据集时。
+
+总的来说,GBDT是一种强大而灵活的集成学习算法,通过迭代地构建决策树和梯度提升的方式,可以有效地解决分类和回归问题。
+
+**结果**
+
+【---------测试集----------】
+Accuracy: 0.965
+正反例的Accuracy: 0.965
+正反例:召回率(Recall): 0.9285714285714286
+正反例:精确率(Precision): 0.9811320754716981
+正反例:F1-Score: 0.9541284403669724
+
+![image-20240409111327130](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111327130.png)
+
+【---------验证集----------】
+验证集Accuracy: 0.988
+正反例的Accuracy: 0.988
+正反例:召回率(Recall): 0.9866666666666667
+正反例:精确率(Precision): 0.9866666666666667
+正反例:F1-Score: 0.9866666666666668
+
+<![image-20240409111339232](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111339232.png)
+
+![image-20240411180217666](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411180217666.png)
+
 ## XGBoost方法
 
 XGBoost (Extreme Gradient Boosting) 是一种基于梯度提升决策树 (GBDT) 算法的高效机器学习库。以上代码展示了如何使用 XGBoost 进行多分类任务。下面我将详细介绍代码中使用的 XGBoost 方法的实现过程：
@@ -698,13 +787,13 @@ Accuracy: 0.98
 ![image-20240409110811203](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409110811203.png)
 
 【---------验证集----------】
-验证集Accuracy: 0.6442307692307693
-正反例的Accuracy: 0.6442307692307693
-正反例:召回率(Recall): 0.0
-正反例:精确率(Precision): 0.0
-正反例:F1-Score: 0.0
+验证集Accuracy: 0.9313186813186813
+正反例的Accuracy: 0.9697802197802198
+正反例:召回率(Recall): 0.9770642201834863
+正反例:精确率(Precision): 0.9260869565217391
+正反例:F1-Score: 0.9508928571428571
 
-![image-20240409110827976](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409110827976.png)
+![image-20240411105656896](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411105656896.png)
 
 ## LightGBM方法
 
@@ -755,54 +844,14 @@ Accuracy: 0.97
 ![image-20240409111148908](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111148908.png)
 
 【---------验证集----------】
-验证集Accuracy: 0.646978021978022
-正反例的Accuracy: 0.646978021978022
-正反例:召回率(Recall): 0.0
-正反例:精确率(Precision): 0.0
-正反例:F1-Score: 0.0
+验证集Accuracy: 0.9739010989010989
+正反例的Accuracy: 0.9835164835164835
+正反例:召回率(Recall): 0.9954128440366973
+正反例:精确率(Precision): 0.9517543859649122
+正反例:F1-Score: 0.9730941704035874
 
-![image-20240409111208127](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111208127.png)
+![image-20240411105824842](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240411105824842.png)
 
-## GBDT方法
-
-在本代码中,通过创建GradientBoostingClassifier对象,设置决策树的数量(n_estimators)和随机种子(random_state),然后使用fit方法在训练数据上训练GBDT模型。接着,使用trained model在测试数据上进行预测,得到预测结果y_pred。最后,通过accuracy_score函数计算模型在测试集上的准确率。
-
-GBDT通过迭代地构建一系列的决策树,并使用梯度提升的方式来优化模型。每一轮迭代都在前一轮模型的残差上训练一棵新的决策树,不断地减少模型的误差。通过多轮迭代,GBDT可以生成一个强大的集成模型,在分类和回归任务上都有出色的表现。
-
-GBDT的优点包括:
-
-1. 非线性建模能力强:通过使用决策树作为基础学习器,GBDT可以捕捉数据中的非线性关系和复杂模式。
-2. 鲁棒性好:GBDT对异常值和缺失值有较好的鲁棒性,可以自动处理缺失值。
-3. 特征重要性评估:GBDT可以计算每个特征对模型的重要性,帮助进行特征选择和解释。
-4. 灵活性高:GBDT允许自定义损失函数,可以适应不同类型的问题。
-
-然而,GBDT也有一些限制:
-
-1. 训练时间较长:由于需要迭代地构建多棵决策树,GBDT的训练时间通常比单个决策树或线性模型长。
-2. 参数调优:GBDT有多个超参数需要调整,如学习率、决策树数量、最大深度等,寻找最优参数组合可能需要一定的调优过程。
-3. 内存消耗:GBDT在训练过程中需要存储多棵决策树,因此内存消耗较大,尤其是在处理大型数据集时。
-
-总的来说,GBDT是一种强大而灵活的集成学习算法,通过迭代地构建决策树和梯度提升的方式,可以有效地解决分类和回归问题。
-
-**结果**
-
-【---------测试集----------】
-Accuracy: 0.965
-正反例的Accuracy: 0.965
-正反例:召回率(Recall): 0.9285714285714286
-正反例:精确率(Precision): 0.9811320754716981
-正反例:F1-Score: 0.9541284403669724
-
-![image-20240409111327130](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111327130.png)
-
-【---------验证集----------】
-验证集Accuracy: 0.988
-正反例的Accuracy: 0.988
-正反例:召回率(Recall): 0.9866666666666667
-正反例:精确率(Precision): 0.9866666666666667
-正反例:F1-Score: 0.9866666666666668
-
-<![image-20240409111339232](https://cdn.jsdelivr.net/gh/PerformapalSolv/githubChartBed@main/img/image-20240409111339232.png)
 
 
 

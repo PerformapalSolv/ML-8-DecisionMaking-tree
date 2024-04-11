@@ -98,49 +98,46 @@ val_df = pd.read_csv('dataset/val.csv', names=['buying', 'maint', 'doors', 'pers
 # 将特征值转换为数值
 features = ['buying', 'maint', 'doors', 'persons', 'lug_boot', 'safety']
 for feature in features:
-    val_df[feature] = df[feature].astype('category').cat.codes
-# 将标签列进行编码
-le = LabelEncoder()
-val_df['label'] = le.fit_transform(val_df['label'])
+    val_df[feature] = val_df[feature].astype('category').cat.codes
+# 使用与训练集相同的编码器对验证集的标签进行编码
+val_df['label'] = le.transform(val_df['label'])
 X_val = val_df[features]
 y_val = val_df['label']
-val_data = lgb.Dataset(X_val, label=y_val)
-# 在验证集上预测
-# 预测
-y_pred = bst.predict(X_val, num_iteration=bst.best_iteration)
-y_pred = [list(x).index(max(x)) for x in y_pred]
+y_pred_val = bst.predict(X_val, num_iteration=bst.best_iteration)
+y_pred_val = [list(x).index(max(x)) for x in y_pred_val]
 # 计算准确率
-accuracy = metrics.accuracy_score(y_val, y_pred)
-print(f"验证集Accuracy: {accuracy}")
+accuracy_val = metrics.accuracy_score(y_val, y_pred_val)
+print(f"验证集Accuracy: {accuracy_val}")
 
 # 将标签转换为二进制形式（unacc为0，其他为1）
 y_val_binary = np.where(y_val == le.transform(['unacc'])[0], 0, 1)
-y_pred_binary = np.where(y_pred == le.transform(['unacc'])[0], 0, 1)
+y_pred_val_binary = np.where(y_pred_val == le.transform(['unacc'])[0], 0, 1)
 
-b_accuracy = metrics.accuracy_score(y_val_binary, y_pred_binary)
-print(f"正反例的Accuracy: {accuracy}")
+b_accuracy_val = metrics.accuracy_score(y_val_binary, y_pred_val_binary)
+print(f"正反例的Accuracy: {b_accuracy_val}")
 # 计算召回率、精确率和F1-Score
-b_recall = metrics.recall_score(y_val_binary, y_pred_binary)
-b_precision = metrics.precision_score(y_val_binary, y_pred_binary)
-b_f1 = metrics.f1_score(y_val_binary, y_pred_binary)
-print(f"正反例:召回率(Recall): {b_recall}")
-print(f"正反例:精确率(Precision): {b_precision}")
-print(f"正反例:F1-Score: {b_f1}")
+b_recall_val = metrics.recall_score(y_val_binary, y_pred_val_binary)
+b_precision_val = metrics.precision_score(y_val_binary, y_pred_val_binary)
+b_f1_val = metrics.f1_score(y_val_binary, y_pred_val_binary)
+print(f"正反例:召回率(Recall): {b_recall_val}")
+print(f"正反例:精确率(Precision): {b_precision_val}")
+print(f"正反例:F1-Score: {b_f1_val}")
 
-# 计算ROC曲线所需的假阳性率和真阳性率
-fpr, tpr, _ = metrics.roc_curve(y_val_binary, y_pred_binary)
+# 计算验证集的ROC曲线所需的假阳性率和真阳性率
+fpr_val, tpr_val, _ = metrics.roc_curve(y_val_binary, y_pred_val_binary)
 
-# 计算AUC（ROC曲线下的面积）
-roc_auc = metrics.auc(fpr, tpr)
+# 计算验证集的AUC
+roc_auc_val = metrics.auc(fpr_val, tpr_val)
 
-# 绘制ROC曲线
+# 绘制测试集和验证集的ROC曲线
 plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='Val set:ROC curve (area = %0.2f)' % roc_auc)
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='Test set: ROC curve (area = %0.2f)' % roc_auc)
+plt.plot(fpr_val, tpr_val, color='blue', lw=2, label='Val set: ROC curve (area = %0.2f)' % roc_auc_val)
 plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Val set:Receiver Operating Characteristic (ROC)')
+plt.title('Receiver Operating Characteristic (ROC)')
 plt.legend(loc="lower right")
 plt.show()
